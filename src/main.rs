@@ -1,10 +1,12 @@
 extern crate clap;
+extern crate futures;
 extern crate rust_php;
 
 mod file;
 
 use crate::file::read_file_and_print_2;
 use clap::{App, Arg};
+use futures::executor::block_on;
 use rust_php::string::file::file_get_contents;
 use std::collections::HashMap;
 use std::env;
@@ -21,8 +23,44 @@ fn main() {
     //            eprintln!("{}", err)
     //        }
     //    }
-    simple_tool();
+    test_async_2();
+    //test_async();
+    //simple_tool();
     //parse_novel();
+}
+
+// 测试 async
+async fn hello() {
+    println!("hello world.");
+}
+async fn hello_1_1() {
+    println!("hello world 2.");
+}
+async fn hello_2() {
+    let future = hello();
+    let future2 = hello_1_1();
+    futures::join!(future, future2);
+}
+
+fn test_async() {
+    let future2 = hello_2();
+    block_on(future2);
+}
+
+/// 测试 async https://zhuanlan.zhihu.com/p/67803708
+fn test_async_2() {
+    async fn func1() -> i32 {
+        12
+    }
+    let func2 = async || -> i32 {
+        let t = 1;
+        let v = t + 1;
+        let b = func1().await;
+        let rv = &v;
+        *rv + b
+    };
+    let fut = func2();
+    println!("future size: {}", std::mem::size_of_val(&fut));
 }
 
 /// 简单的命令行工具

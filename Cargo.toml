@@ -10,4 +10,6 @@ edition = "2018"
 clap = "~2.33.0"
 futures = "0.3"
 rust-php = {path="../rust-php"}
-
+asyncnsq = "0.1.0"
+async-std = "1.5.0"
+serde = "1.0.104"
